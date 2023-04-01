@@ -64,7 +64,7 @@ public class MultiplicationServiceImplTest {
     }
 
     @Test
-    void checkCorrectAttemptTest(){
+    void checkCorrectAttemptTest() throws Exception{
         Multiplication multiplication = new Multiplication(50, 60);
         User user = new User("john_doe");
         MultiplicationResultAttempt attempt = new MultiplicationResultAttempt(user, multiplication, 3000, false);
@@ -86,7 +86,7 @@ public class MultiplicationServiceImplTest {
     }
 
     @Test
-    void checkWrongAttemptTest(){
+    void checkWrongAttemptTest() throws Exception{
         Multiplication multiplication = new Multiplication(50, 60);
         User user = new User("john_doe");
         MultiplicationResultAttempt attempt = new MultiplicationResultAttempt(user, multiplication, 5263, false);

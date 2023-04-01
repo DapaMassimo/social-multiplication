@@ -10,6 +10,11 @@ public class MultiplicationSolvedEvent implements Serializable {
     private final Long multiplicationResultAttemptId;
     private final Boolean correct;
 
+    public MultiplicationSolvedEvent(){
+        this.userId = null;
+        this.multiplicationResultAttemptId = null;
+        this.correct = null;
+    }
     public MultiplicationSolvedEvent(Long userId, Long multiplicationResultAttemptId, Boolean correct) {
         this.userId = userId;
         this.multiplicationResultAttemptId = multiplicationResultAttemptId;

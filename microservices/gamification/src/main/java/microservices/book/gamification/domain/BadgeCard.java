@@ -1,5 +1,8 @@
 package microservices.book.gamification.domain;
 
+import microservices.book.gamification.domain.badge.jpa.BadgeConverter;
+import microservices.book.gamification.domain.badge.Badge;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,6 +21,8 @@ public final class BadgeCard implements Serializable {
 
     private final Long userId;
     private final Long badgeTimestamp;
+
+    @Convert(converter = BadgeConverter.class)
     private final Badge badge;
 
     public BadgeCard(Long badgeId, Long userId, Long badgeTimestamp, Badge badge) {
@@ -51,4 +56,13 @@ public final class BadgeCard implements Serializable {
         return badge;
     }
 
+    @Override
+    public String toString() {
+        return "BadgeCard{" +
+                "badgeId=" + badgeId +
+                ", userId=" + userId +
+                ", badgeTimestamp=" + badgeTimestamp +
+                ", badge=" + badge +
+                '}';
+    }
 }

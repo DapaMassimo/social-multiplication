@@ -1,5 +1,7 @@
 package microservices.book.gamification.domain;
 
+import microservices.book.gamification.domain.badge.Badge;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

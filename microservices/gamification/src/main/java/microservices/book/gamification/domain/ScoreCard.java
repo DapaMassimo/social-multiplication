@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  * Models one incremental set of points that a given
- * user gets at a given time.
+ * user gets at a given time (for a single game session?).
  */
 @Entity
 @Table(name = "SCORE_CARD")
@@ -74,5 +74,17 @@ public final class ScoreCard implements Serializable {
 
     public boolean isCorrect() {
         return correct;
+    }
+
+    @Override
+    public String toString() {
+        return "ScoreCard{" +
+                "cardId=" + cardId +
+                ", userId=" + userId +
+                ", attemptId=" + attemptId +
+                ", scoreTimestamp=" + scoreTimestamp +
+                ", score=" + score +
+                ", correct=" + correct +
+                '}';
     }
 }

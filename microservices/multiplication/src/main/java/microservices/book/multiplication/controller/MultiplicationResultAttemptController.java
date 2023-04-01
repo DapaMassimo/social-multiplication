@@ -44,8 +44,8 @@ final class MultiplicationResultAttemptController {
         return ResponseEntity.ok(multiplicationService.getStatsForUsers(alias));
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<MultiplicationResultAttempt> getMultiplicationResultAttemptById(@PathVariable(name="id") Long multiplicationResultAttemptId) throws MicroServiceException{
+    @GetMapping("/{attemptId}")
+    ResponseEntity<MultiplicationResultAttempt> getMultiplicationResultAttemptById(@PathVariable(name="attemptId") Long multiplicationResultAttemptId) throws MicroServiceException{
         return ResponseEntity.ok(multiplicationService.getMultiplicationResultAttemptById(multiplicationResultAttemptId));
     }
 }

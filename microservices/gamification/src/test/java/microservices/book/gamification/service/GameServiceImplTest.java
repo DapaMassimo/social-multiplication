@@ -1,7 +1,9 @@
 package microservices.book.gamification.service;
 
 import common.service.domain.base.exception.MicroServiceException;
+import microservices.book.gamification.client.MultiplicationResultAttemptClient;
 import microservices.book.gamification.domain.*;
+import microservices.book.gamification.domain.badge.SpecialBadge;
 import microservices.book.gamification.repository.BadgeCardRepository;
 import microservices.book.gamification.repository.ScoreCardRepository;
 import microservices.book.gamification.service.impl.GameServiceImpl;
@@ -31,6 +33,8 @@ public class GameServiceImplTest {
 
     private GameServiceImpl gameService;
 
+    private MultiplicationResultAttemptClient multiplicationResultAttemptClient;
+
     @Mock
     private BadgeCardRepository badgeCardRepository;
 
@@ -41,7 +45,7 @@ public class GameServiceImplTest {
     @BeforeAll
     void initAll(){
         MockitoAnnotations.openMocks(this);
-        gameService = new GameServiceImpl(scoreCardRepository, badgeCardRepository);
+        gameService = new GameServiceImpl(scoreCardRepository, badgeCardRepository, multiplicationResultAttemptClient);
     }
 
     @Test
@@ -52,7 +56,7 @@ public class GameServiceImplTest {
         int totalScore = 10; // Default value set in ScoreCard constructor
         ScoreCard scoreCard = new ScoreCard(userId, attemptId, true);
         LeaderBoardRow leaderBoardRow = new LeaderBoardRow(userId, totalScore);
-        BadgeCard badgeCard = new BadgeCard(userId, Badge.FIRST_ATTEMPT);
+        BadgeCard badgeCard = new BadgeCard(userId, SpecialBadge.FIRST_ATTEMPT);
 
         given(scoreCardRepository.getTotalScoreForUser(userId)).willReturn(totalScore);
         given(scoreCardRepository.findByUserIdOrderByScoreTimestampDesc(userId)).willReturn(Collections.singletonList(scoreCard));
