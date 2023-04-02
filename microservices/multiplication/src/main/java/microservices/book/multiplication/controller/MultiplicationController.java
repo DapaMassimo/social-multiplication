@@ -7,6 +7,8 @@ import microservices.book.multiplication.domain.MultiplicationResultAttempt;
 import microservices.book.multiplication.domain.ProvaPayloadResponse;
 import microservices.book.multiplication.service.impl.MultiplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
@@ -21,6 +23,9 @@ import java.util.*;
 final class MultiplicationController {
 
     private final MultiplicationServiceImpl multiplicationService;
+
+    private static final Logger logger = LoggerFactory.getLogger(MultiplicationController.class);
+
 
     @Autowired
     public MultiplicationController(MultiplicationServiceImpl multiplicationService) {
@@ -44,7 +49,6 @@ final class MultiplicationController {
     @GetMapping("/prova")
     ResponseEntity<ProvaPayloadResponse> getProva(@RequestBody @Valid GetProvaPayloadRequest getProvaPayloadRequest) throws MicroServiceException{
         ProvaPayloadResponse provaPayloadResponse = new ProvaPayloadResponse();
-        System.out.println("ecco qui: " + getProvaPayloadRequest.getNeededString());
         return new ResponseEntity<>(provaPayloadResponse, HttpStatus.OK);
     }
 
@@ -58,7 +62,6 @@ final class MultiplicationController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        System.out.println("ciaoooo");
         return errors;
     }
 
