@@ -14,6 +14,7 @@ import java.io.Serializable;
 public final class BadgeCard implements Serializable {
 
     private static final long serialVersionUID = -6048896600632620497L;
+
     @Id
     @GeneratedValue
     @Column(name="BADGE_ID")

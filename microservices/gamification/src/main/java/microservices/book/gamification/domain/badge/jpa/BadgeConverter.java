@@ -1,14 +1,28 @@
 package microservices.book.gamification.domain.badge.jpa;
 
-import microservices.book.gamification.domain.badge.Badge;
-import microservices.book.gamification.domain.badge.ScoreBadge;
-import microservices.book.gamification.domain.badge.SpecialBadge;
+import microservices.book.gamification.domain.badge.*;
+import org.reflections.Reflections;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import java.util.Optional;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.reflections.scanners.Scanners.SubTypes;
+
 @Converter
 public class BadgeConverter implements AttributeConverter<Badge, String> {
+
+    private final String separator = ";";
+
+    private final String badgePackage = "microservices.book.gamification.domain.badge";
+
+    private static final Logger logger = LoggerFactory.getLogger(BadgeConverter.class);
+
 
     /**
      * Converts the value stored in the entity attribute into the
@@ -20,8 +34,10 @@ public class BadgeConverter implements AttributeConverter<Badge, String> {
      */
     @Override
     public String convertToDatabaseColumn(Badge attribute) {
-        return attribute.toString();
+        String columnValue = attribute.getClass().getSimpleName() + separator + attribute;
+        return columnValue;
     }
+
 
     /**
      * Converts the data stored in the database column into the
@@ -39,29 +55,22 @@ public class BadgeConverter implements AttributeConverter<Badge, String> {
     @Override
     public Badge convertToEntityAttribute(String dbData) {
         Badge badge = null;
+        String enumName = dbData.split(separator)[0];
+        String attribute = dbData.split(separator)[1];
 
-        int i = 0;
-        boolean found = false;
-        SpecialBadge[] specialBadges = SpecialBadge.values();
-        while(i < specialBadges.length && !found){
-            if(specialBadges[i].toString().equalsIgnoreCase(dbData)){
-                found = true;
-                badge = specialBadges[i];
-            }
-            i++;
-        }
+        Reflections reflections = new Reflections(badgePackage);
 
-        if(!found){
-            ScoreBadge[] scoreBadges = ScoreBadge.values();
-            i = 0;
-            while(i < scoreBadges.length && !found){
-                if(scoreBadges[i].toString().equalsIgnoreCase(dbData)){
-                    found = true;
-                    badge = scoreBadges[i];
-                }
-                i++;
-            }
-        }
+        Set<Class<?>> subTypes = reflections.get(SubTypes.of(Badge.class).asClass());
+
+        if(!subTypes.isEmpty()){
+            Optional<Class<?>> badgeOptional = subTypes.stream().filter(subType -> {
+                return subType.getSimpleName().equalsIgnoreCase(enumName);
+            }).findFirst();
+
+            if(badgeOptional.isPresent()){
+                badge = Enum.valueOf(badgeOptional.get().asSubclass(Enum.class), attribute);
+            } else logger.debug("badgeOptional is not present");
+        } else logger.debug("subtype is empty");
 
         return badge;
     }
