@@ -12,10 +12,13 @@ import microservices.book.gamification.repository.ScoreCardRepository;
 import microservices.book.gamification.service.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.support.ListenerExecutionFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +32,7 @@ public class GameServiceImpl implements GameService {
 
     private final MultiplicationResultAttemptClient multiplicationResultAttemptClient;
 
+
     @Autowired
     public GameServiceImpl(ScoreCardRepository scoreCardRepository, BadgeCardRepository badgeCardRepository,
                            MultiplicationResultAttemptClient multiplicationResultAttemptClient) {
@@ -36,6 +40,7 @@ public class GameServiceImpl implements GameService {
         this.badgeCardRepository = badgeCardRepository;
         this.multiplicationResultAttemptClient = multiplicationResultAttemptClient;
     }
+
 
     @Override
     public GameStats newAttemptForUser(Long userId, Long attemptId, boolean correct) throws MicroServiceException {
@@ -49,6 +54,7 @@ public class GameServiceImpl implements GameService {
 
         return gameStats;
     }
+
 
     @Override
     public GameStats retrieveStatsForUser(Long userId) throws MicroServiceException{
@@ -82,6 +88,7 @@ public class GameServiceImpl implements GameService {
             if (usc.size() == 1 && !badgeAlreadyAchieved(ubc, SpecialBadge.FIRST_ATTEMPT)) {
                 // first attempt
                 badgeCardRepository.save(new BadgeCard(userId, SpecialBadge.FIRST_ATTEMPT));
+                logger.debug("Giving FIRST_ATTEMPT badge to userId: {}", userId);
             }
             // we save scoreCards both for correct and incorrect attempts
             if (correct) {
@@ -89,6 +96,7 @@ public class GameServiceImpl implements GameService {
                     if (!badgeAlreadyAchieved(ubc, SpecialBadge.FIRST_WON)) {
                         // first correct attempt
                         badgeCardRepository.save(new BadgeCard(userId, SpecialBadge.FIRST_WON));
+                        logger.debug("Giving FIRST_WON badge to userId: {}", userId);
                     }
                 }
 
@@ -96,6 +104,7 @@ public class GameServiceImpl implements GameService {
                     MultiplicationResultAttempt multiplicationResultAttempt = multiplicationResultAttemptClient.retrieveMultiplicationResultAttemptByAttemptId(attemptId);
                     if(multiplicationResultAttempt.getFactorA() == 42 || multiplicationResultAttempt.getFactorB() == 42) {
                         badgeCardRepository.save(new BadgeCard(userId, SpecialBadge.LUCKY_NUMBER));
+                        logger.debug("Giving LUCKY_NUMBER badge to userId: {}", userId);
                     }
                 }
             }
@@ -105,24 +114,23 @@ public class GameServiceImpl implements GameService {
             throw new MicroServiceException("User scoreCard list is emtpy!");
         }
 
-        if(ubc != null){
-            checkAndGiveBadgesBasedOnScore(userId, userTotalScore, ubc, badgeCardRepository, ScoreBadge.BRONZE_MULTIPLICATOR);
-            checkAndGiveBadgesBasedOnScore(userId, userTotalScore, ubc, badgeCardRepository, ScoreBadge.SILVER_MULTIPLICATOR);
-            checkAndGiveBadgesBasedOnScore(userId, userTotalScore, ubc, badgeCardRepository, ScoreBadge.GOLD_MULTIPLICATOR);
+        checkAndGiveBadgesBasedOnScore(userId, userTotalScore, ubc);
+    }
+
+
+    private void checkAndGiveBadgesBasedOnScore(Long userId, int userTotalScore, List<BadgeCard> badgeCardList){
+
+        Optional<ScoreBadge> optionalScoreBadge = Arrays.stream(ScoreBadge.values()).filter(scoreBadge -> scoreBadge.getPoints() == userTotalScore).findFirst();
+        if(optionalScoreBadge.isPresent() && !badgeAlreadyAchieved(badgeCardList, optionalScoreBadge.get())){
+            BadgeCard badgeCardWon = new BadgeCard(userId, optionalScoreBadge.get());
+            badgeCardList.add(badgeCardWon);
+            badgeCardRepository.save(badgeCardWon);
+            logger.debug("Giving badge {} to userId {}", badgeCardWon.getBadge(), userId);
         } else {
-            logger.debug("User has no badgeCards in repository!");
+            logger.debug("No score badge given, user total score: {}", userTotalScore);
         }
     }
 
-    private void checkAndGiveBadgesBasedOnScore(Long userId, int userTotalScore, List<BadgeCard> badgeCardList,
-                                                BadgeCardRepository badgeCardRepository, Badge badge) throws MicroServiceException{
-        if(userTotalScore == badge.getPoints() &&
-                badgeCardList.parallelStream().noneMatch(badgeCard -> badgeCard.getBadge().equals(badge))){
-            BadgeCard badgeCardWon = new BadgeCard(userId, badge);
-            badgeCardList.add(badgeCardWon);
-            badgeCardRepository.save(badgeCardWon);
-        }
-    }
 
     private boolean badgeAlreadyAchieved(List<BadgeCard> badgeCardList, Badge badge){
         if(badgeCardList != null && !badgeCardList.isEmpty() && badgeCardList.stream().anyMatch(badgeCard ->
