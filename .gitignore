@@ -35,3 +35,10 @@ build/
 .mvn
 mvnw
 mvnw.cmd
+
+
+!/ui/instance/webapps
+/ui/instance/*
+
+!/ui/instance/webapps/ROOT
+/ui/instance/webapps/*
