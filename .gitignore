@@ -37,8 +37,9 @@ mvnw
 mvnw.cmd
 
 
-!/ui/instance/webapps
-/ui/instance/*
 
-!/ui/instance/webapps/ROOT
-/ui/instance/webapps/*
+ui/instance/*
+!ui/instance/webapps
+
+ui/instance/webapps/*
+!ui/instance/webapps/ROOT
