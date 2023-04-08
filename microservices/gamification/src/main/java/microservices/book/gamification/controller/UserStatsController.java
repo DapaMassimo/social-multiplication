@@ -24,8 +24,7 @@ public class UserStatsController {
     }
 
     @GetMapping
-    ResponseEntity<GameStats> getUserStats(@RequestParam("user") String userId) throws MicroServiceException {
-        logger.debug("UserId is {}", userId);
+    ResponseEntity<GameStats> getUserStats(@RequestParam("userId") String userId) throws MicroServiceException {
         return ResponseEntity.ok(gameService.retrieveStatsForUser(Long.parseLong(userId)));
     }
 }
