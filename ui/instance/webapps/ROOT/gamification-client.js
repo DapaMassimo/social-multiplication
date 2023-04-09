@@ -17,7 +17,7 @@ function updateStats(userId) {
             $('#stats-div').show();
             $('#stats-user-id').empty().append(userId);
             $('#stats-score').empty().append(data.score);
-            $('#stats-badges').empty().append(data.badges.join());
+            $('#stats-badges').empty().append(data.badgeList.join());
         },
         error: function(data) {
             $('#stats-div').show();
