@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * A position in the leaderboard that is the total score together with the user.
  */
-public final class LeaderBoardRow implements Serializable, LeaderBoardRowInterface {
+public final class LeaderBoardRow implements Serializable {
 
     private static final long serialVersionUID = 8110573614685298184L;
 
@@ -21,12 +21,10 @@ public final class LeaderBoardRow implements Serializable, LeaderBoardRowInterfa
         this.totalScore = totalScore;
     }
 
-    @Override
     public Long getUserId() {
         return userId;
     }
 
-    @Override
     public long getTotalScore() {
         return totalScore;
     }

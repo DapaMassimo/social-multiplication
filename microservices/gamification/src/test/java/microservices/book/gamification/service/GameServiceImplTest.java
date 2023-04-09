@@ -4,6 +4,7 @@ import common.service.domain.base.exception.MicroServiceException;
 import microservices.book.gamification.client.MultiplicationResultAttemptClient;
 import microservices.book.gamification.domain.*;
 import microservices.book.gamification.domain.badge.SpecialBadge;
+import microservices.book.gamification.domain.LeaderBoardRow;
 import microservices.book.gamification.repository.BadgeCardRepository;
 import microservices.book.gamification.repository.ScoreCardRepository;
 import microservices.book.gamification.service.impl.GameServiceImpl;
