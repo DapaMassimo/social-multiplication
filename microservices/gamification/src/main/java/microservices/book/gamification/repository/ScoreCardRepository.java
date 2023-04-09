@@ -24,7 +24,7 @@ public interface ScoreCardRepository extends CrudRepository<ScoreCard, Long> {
      * representing the Leader Board of users and their total score.
      * @return the leader board, sorted by highest score first.
      */
-    @Query(value = "SELECT USER_ID, SUM(SCORE) " +
+    @Query(value = "SELECT USER_ID as userId, SUM(SCORE) as totalScore" +
             "FROM SCORE_CARD " +
             "GROUP BY USER_ID ORDER BY SUM(SCORE) DESC", nativeQuery = true)
     List<LeaderBoardRow> findFirst10();
