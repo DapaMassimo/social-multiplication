@@ -5,7 +5,7 @@
 2. Start RabbitMQ:
     - Open PS with admin privileges
     - Start RabbitMQ server: ```rabbitmq-server start```
-    - Start RabbitMQ node: ```rabbitmqctl stop_app```
+    - Start RabbitMQ node: ```rabbitmqctl start_app```
 
 3. Start multiplication-ms
 4. Start gamification-ms
