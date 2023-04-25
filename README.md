@@ -1,3 +1,5 @@
+# Start up info
+
 1. Run the RabbitMQ server (if not yet running): 
    - Open PS with admin privileges
    - Start RabbitMQ server: ```rabbitmq-server start```
@@ -18,7 +20,12 @@
 
 &nbsp;
 
+# MISC
 
 Eureka dashboard: localhost:8761
 
 tomcat FE service: localhost:9090
+
+Access spring doc api, there's one for each controller: 
+  - gamification: http://localhost:8081/swagger-ui/gamification-ms
+  - multiplication: http://localhost:8080/swagger-ui/multiplication-ms
