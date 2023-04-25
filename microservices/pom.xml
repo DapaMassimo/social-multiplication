@@ -30,6 +30,7 @@
 
         <ms.multiplication.common.version>1.0-SNAPSHOT</ms.multiplication.common.version>
         <ms.gamification.common.version>1.0-SNAPSHOT</ms.gamification.common.version>
+        <spring-cloud.version>2021.0.5</spring-cloud.version>
     </properties>
 
 
