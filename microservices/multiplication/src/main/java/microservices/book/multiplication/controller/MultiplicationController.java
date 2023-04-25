@@ -46,23 +46,4 @@ final class MultiplicationController {
                 multiplicationResultAttempt.getMultiplication().getFactorB()));
     }
 
-    @GetMapping("/prova")
-    ResponseEntity<ProvaPayloadResponse> getProva(@RequestBody @Valid GetProvaPayloadRequest getProvaPayloadRequest) throws MicroServiceException{
-        ProvaPayloadResponse provaPayloadResponse = new ProvaPayloadResponse();
-        return new ResponseEntity<>(provaPayloadResponse, HttpStatus.OK);
-    }
-
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) throws MicroServiceException{
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-
 }
