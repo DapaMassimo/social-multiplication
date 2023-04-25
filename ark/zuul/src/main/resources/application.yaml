@@ -34,3 +34,11 @@ endpoints:
     sensitive: false
   routes:
     sensitive: false
+
+multiplication:
+  ribbon:
+    listOfServers: http://localhost:8080
+
+gamification:
+  ribbon:
+    listOfServers: http://localhost:8081
