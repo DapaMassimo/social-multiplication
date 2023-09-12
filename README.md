@@ -1,6 +1,6 @@
 # Start up info
 
-1. Run the RabbitMQ server (if not yet running): 
+1. Run the RabbitMQ server: 
    - Open PS with admin privileges
    - Start RabbitMQ server: ```rabbitmq-server start```
    - Start RabbitMQ node: ```rabbitmqctl start_app```
